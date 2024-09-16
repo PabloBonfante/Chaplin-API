@@ -26,8 +26,16 @@ export const InsertEmpleado = async (req: Request, res: Response): Promise<void>
 
 export const getAllEmpleado = async (_req: Request, res: Response): Promise<void> => {
     try {
-        const servicios = await empleadoService.getAllEmpleado();
-        res.status(200).json(servicios);
+        const empleados = await empleadoService.getAllEmpleado();
+        res.status(200).json(empleados);
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+};
+export const getAllEmpleadoExtended = async (_req: Request, res: Response): Promise<void> => {
+    try {
+        const empleados = await empleadoService.getAllExtended();
+        res.status(200).json(empleados);
     } catch (err: any) {
         res.status(500).json({ error: err.message });
     }

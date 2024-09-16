@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Empleado from "../Models/empleado";
 import FormaPago from "../Models/formapago";
 import RegistroDeBarberia, { RegistroDeBarberiaExtendedAttributes } from "../Models/registrodebarberia";
@@ -17,7 +18,7 @@ export const getAllRegistroDeBarberia = async (): Promise<RegistroDeBarberia[]> 
   return registroDeBarberias;
 };
 
-export const getAllRegistroDeBarberiaExtended = async (page: number = 1, pageSize: number = 10): Promise<RegistroDeBarberiaExtendedAttributes[]> => {
+export const getAllRegistroDeBarberiaExtended = async (desde: Date, hasta: Date, page: number = 1, pageSize: number = 10): Promise<RegistroDeBarberiaExtendedAttributes[]> => {
   const registrosExtendidos: RegistroDeBarberiaExtendedAttributes[] = [];
 
   try {
@@ -39,6 +40,11 @@ export const getAllRegistroDeBarberiaExtended = async (page: number = 1, pageSiz
           attributes: ['Codigo', 'Descripcion'],
         }
       ],
+      where: {
+        Fecha: {
+          [Op.between]: [desde, hasta]
+        }
+      },
       raw: true, // devuelve los datos en formato de objeto plano
       limit: pageSize, // cantidad de registros por página
       offset: (page - 1) * pageSize // salto de registros

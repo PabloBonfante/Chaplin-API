@@ -3,7 +3,7 @@ import * as empleadoPorsentajeService from '../Services/empleadoPorsentajeServic
 import { EmpleadoPorsentajeSchema } from '../schemas/chaplin';
 import EmpleadoPorsentajeCreationAttributes from '../Models/empleadoporsentaje';
 
-export const createempleadoPorsentaje = async (req: Request, res: Response): Promise<void> => {
+export const createEmpleadoPorsentaje = async (req: Request, res: Response): Promise<void> => {
   try {
     const parsedResult = EmpleadoPorsentajeSchema.safeParse(req.body);
 
@@ -20,7 +20,7 @@ export const createempleadoPorsentaje = async (req: Request, res: Response): Pro
   }
 };
 
-export const getAllempleadoPorsentaje = async (_req: Request, res: Response): Promise<void> => {
+export const getAllEmpleadoPorsentaje = async (_req: Request, res: Response): Promise<void> => {
   try {
     const empleadoPorsentajes = await empleadoPorsentajeService.getAllEmpleadoPorsentaje();
     res.status(200).json(empleadoPorsentajes);
@@ -29,7 +29,8 @@ export const getAllempleadoPorsentaje = async (_req: Request, res: Response): Pr
   }
 };
 
-export const getempleadoPorsentajeById = async (req: Request, res: Response): Promise<void> => {
+
+export const getEmpleadoPorsentajeById = async (req: Request, res: Response): Promise<void> => {
   try {
     const empleadoPorsentaje = await empleadoPorsentajeService.getEmpleadoPorsentajeById(parseInt(req.params.id));
     if (empleadoPorsentaje !== null) {
@@ -42,7 +43,7 @@ export const getempleadoPorsentajeById = async (req: Request, res: Response): Pr
   }
 };
 
-export const updateempleadoPorsentaje = async (req: Request, res: Response): Promise<void> => {
+export const updateEmpleadoPorsentaje = async (req: Request, res: Response): Promise<void> => {
   try {
     const parsedResult = EmpleadoPorsentajeSchema.safeParse(req.body);
 
@@ -64,7 +65,7 @@ export const updateempleadoPorsentaje = async (req: Request, res: Response): Pro
   }
 };
 
-export const deleteempleadoPorsentaje = async (req: Request, res: Response): Promise<void> => {
+export const deleteEmpleadoPorsentaje = async (req: Request, res: Response): Promise<void> => {
   try {
     const success = await empleadoPorsentajeService.deleteEmpleadoPorsentaje(parseInt(req.params.id));
     if (success) {

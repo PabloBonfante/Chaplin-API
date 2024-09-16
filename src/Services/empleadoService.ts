@@ -1,4 +1,5 @@
-import Empleado from "../Models/empleado";
+import Empleado, { EmpleadoExtendedAttributes } from "../Models/empleado";
+import Rol from "../Models/rol";
 
 export const insertEmpleado = async (empleadoObj: Empleado): Promise<Empleado | null> => {
 
@@ -19,6 +20,35 @@ export const insertEmpleado = async (empleadoObj: Empleado): Promise<Empleado | 
 export const getAllEmpleado = async (): Promise<Empleado[]> => {
     const empleados = await Empleado.findAll();
     return empleados;
+};
+
+export const getAllExtended = async (): Promise<EmpleadoExtendedAttributes[]> => {
+    const registrosExtendidos: EmpleadoExtendedAttributes[] = [];
+
+    const empleados = await Empleado.findAll({
+        include: [
+            {
+                model: Rol,
+                as: 'Rol',
+                attributes: ['NombreRol'], // selecciona las columnas que necesitas
+            },
+        ],
+        raw: true, // devuelve los datos en formato de objeto plano
+    });
+
+    // Procesar los registros extendidos
+    registrosExtendidos.push(...empleados.map((registro: any) => ({
+        Id: registro.Id,
+        Nombre: registro.Nombre,
+        Apellido: registro.Apellido,
+        DNI: registro.DNI,
+        Edad: registro.Edad,
+        FechaContratacion: registro.FechaContratacion,
+        IdRol: registro.IdRol,
+        NombreRol: String(registro['Rol.NombreRol']),
+    })));
+
+    return registrosExtendidos;
 };
 
 export const getEmpleadoById = async (id: number): Promise<Empleado | null> => {

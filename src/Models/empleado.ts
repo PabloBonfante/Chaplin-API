@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
+import Rol from './rol';
 
 interface EmpleadoAttributes {
     Id?: number,
@@ -12,6 +13,9 @@ interface EmpleadoAttributes {
 }
 
 interface EmpleadoCreationAttributes extends Optional<EmpleadoAttributes, 'Id'> { }
+interface EmpleadoExtendedAttributes extends EmpleadoAttributes {
+    NombreRol: string
+}
 
 class Empleado extends Model<EmpleadoAttributes, EmpleadoCreationAttributes> implements EmpleadoAttributes {
     public Id!: number;
@@ -59,6 +63,13 @@ Empleado.init({
     timestamps: false,
 });
 
+Empleado.belongsTo(Rol, {
+    foreignKey: {
+        name: 'IdRol',
+        allowNull: false,
+    },
+});
+
 export default Empleado;
-export { EmpleadoAttributes, EmpleadoCreationAttributes };
+export { EmpleadoAttributes, EmpleadoCreationAttributes, EmpleadoExtendedAttributes };
 
