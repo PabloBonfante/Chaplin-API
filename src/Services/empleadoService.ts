@@ -1,84 +1,45 @@
-import { connect } from '../db';
-import { Empleado } from '../Models/types';
+import Empleado from "../Models/empleado";
 
-export async function getAllEmpleados(): Promise<Empleado[]> {
-    const conn = await connect();
-    const [rows] = await conn.query('SELECT * FROM empleado');
-    return rows as Empleado[];
-}
+export const insertEmpleado = async (empleadoObj: Empleado): Promise<Empleado | null> => {
 
-export async function getEmpleado(id: number): Promise<Empleado | null> {
-    const conn = await connect();
-    try {
-        const query = `
-            SELECT Id, Nombre, Apellido, DNI, Edad, FechaContratacion
-            FROM db_chaplin.empleado
-            WHERE Id = ?
-            LIMIT 1
-        `;
-        const [rows] = await conn.query(query, [id]);
-        
-        const empleados = rows as Empleado[]; // Realizamos el cast para que TypeScript lo reconozca como array de Empleado
-        
-        if (empleados.length === 0) return null;
+    const existe = await Empleado.findAll({
+        where: {
+            DNI: empleadoObj.DNI
+        },
+    });
 
-        return empleados[0];
-    } catch (error) {
-        console.error(error);
+    if (existe.length === 0) {
+        const servicio = await Empleado.create(empleadoObj);
+        return servicio;
+    } else {
         return null;
     }
-}
+};
 
-export async function insertEmpleado(newEmpleado: Empleado): Promise<Empleado> {
-    const conn = await connect();
-    await conn.execute(
-        'INSERT INTO empleado (Nombre, Apellido, DNI, Edad, FechaContratacion) VALUES (?, ?, ?, ?, ?)',
-        [
-            newEmpleado.Nombre,
-            newEmpleado.Apellido,
-            newEmpleado.DNI,
-            newEmpleado.Edad,
-            newEmpleado.FechaContratacion,
-        ]
-    );
-    
-    // Obtener el ID del empleado recién insertado
-    const [result] = await conn.execute('SELECT LAST_INSERT_ID() as id');
-    const insertedId = (result as any)[0].id;
+export const getAllEmpleado = async (): Promise<Empleado[]> => {
+    const empleados = await Empleado.findAll();
+    return empleados;
+};
 
-    // Devolver el empleado insertado
-    return {
-        ...newEmpleado,
-        id: insertedId,
-    };
-}
+export const getEmpleadoById = async (id: number): Promise<Empleado | null> => {
+    const empleado = await Empleado.findByPk(id);
+    return empleado;
+};
 
-export async function updateEmpleado(id: number, empleado: Partial<Empleado>): Promise<boolean> {
-    try {
-        const conn = await connect();
-        const query = 'UPDATE empleado SET ? WHERE id = ?';
-        const [result] = await conn.query(query, [empleado, id]);
-
-        const updateResult = result as any; // Puedes tipar esto mejor según el tipo específico que devuelva mysql2
-
-        return updateResult.affectedRows > 0;
-    } catch (error) {
-        return false;
+export const updateEmpleado = async (id: number, newEmpleado: Empleado): Promise<Empleado | null> => {
+    const empleado = await Empleado.findByPk(id);
+    if (empleado !== null) {
+        await empleado.update(newEmpleado);
+        return empleado;
     }
-}
+    return null;
+};
 
-export async function deleteEmpleado(id: number): Promise<boolean> {
-    try {
-        console.log(id);
-        const conn = await connect();
-        const query = 'DELETE FROM empleado WHERE id = ?';
-        const [result] = await conn.execute(query, [id]);
-
-        const deleteResult = result as any; // Puedes tipar esto mejor según el tipo específico que devuelva mysql2
-
-        return deleteResult.affectedRows > 0;
-    } catch (error) {
-        console.log('ERROR:')
-        return false;
+export const deleteEmpleado = async (id: number): Promise<boolean> => {
+    const empleado = await Empleado.findByPk(id);
+    if (empleado !== null) {
+        await empleado.destroy();
+        return true;
     }
-}
+    return false;
+};
