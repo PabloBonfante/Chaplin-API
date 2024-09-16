@@ -80,3 +80,28 @@ export const deleteUsuario = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ error: err.message });
     }
 };
+
+export const LoginUsuario = async (_req: Request, res: Response): Promise<void> => {
+    try {
+        // Validar que alias y password se hayan ingresado
+        const alias = _req.query.alias as string ?? '';
+        const pass = _req.query.password as string ?? '';
+
+        // Verificar que alias y password no estén vacíos
+        if (alias.trim() === '' || pass.trim() === '') {
+            res.status(400).json({ message: "Se requiere el alias y la contraseña" });
+            return; // Salir de la función si faltan parámetros
+        }
+
+        // Intentar iniciar sesión con alias y contraseña
+        const usuario = await usuarioService.loginUsuario(alias, pass);
+
+        if (usuario === null) {
+            res.status(401).json({ message: "Usuario o contraseña incorrecto" });
+        } else {
+            res.status(200).json(usuario); // Inicio de sesión exitoso
+        }
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+};

@@ -37,7 +37,7 @@ export async function getCierreCaja(desde: Date, hasta: Date): Promise<CierreCaj
 
         while (currentDate <= hasta) {
             const cccDia: CierreCajaDia = {
-                dia: currentDate,
+                dia: new Date(currentDate),
                 empleados: [],
                 totalDia: new CierreCajaTotales(),
                 totalDiaJefe: new CierreCajaTotales()

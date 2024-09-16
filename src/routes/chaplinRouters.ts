@@ -4,7 +4,7 @@ import { createServicio, deleteServicio, getAllServicio, getServicioById, update
 import { createEmpleadoPorsentaje, deleteEmpleadoPorsentaje, getAllEmpleadoPorsentaje, getEmpleadoPorsentajeById, updateEmpleadoPorsentaje } from '../controllers/EmpleadoPorsentajeController';
 import { createRegistroDeBarberia, deleteRegistroDeBarberia, getAllRegistroDeBarberia, getRegistroDeBarberiaById, updateRegistroDeBarberia, getAllRegistroDeBarberiaExtended } from '../controllers/registroDeBarberiaController';
 import { InsertFormaPago, deleteFormaPago, getAllFormaPago, getFormaPagoById, updateFormaPago } from '../controllers/formaPagoController';
-import { getAllUsuario, getUsuarioById, InsertUsuario, updateUsuario, deleteUsuario } from '../controllers/usuarioController';
+import { getAllUsuario, getUsuarioById, InsertUsuario, updateUsuario, deleteUsuario, LoginUsuario } from '../controllers/usuarioController';
 import { getCierreCaja } from '../controllers/cierreCajaController';
 
 const router = express.Router();
@@ -23,6 +23,7 @@ router.route('/empleado/:id').put(asyncHandler(updateEmpleado));
 router.route('/empleado/:id').delete(asyncHandler(deleteEmpleado));
 
 // Usuario
+router.route('/usuario/login').get(asyncHandler(LoginUsuario));
 router.route('/usuario/').get(asyncHandler(getAllUsuario));
 router.route('/usuario/:id').get(asyncHandler(getUsuarioById));
 router.route('/usuario/').post(asyncHandler(InsertUsuario));
