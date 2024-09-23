@@ -6,6 +6,7 @@ import { createRegistroDeBarberia, deleteRegistroDeBarberia, getAllRegistroDeBar
 import { InsertFormaPago, deleteFormaPago, getAllFormaPago, getFormaPagoById, updateFormaPago } from '../controllers/formaPagoController';
 import { getAllUsuario, getUsuarioById, InsertUsuario, updateUsuario, deleteUsuario, LoginUsuario } from '../controllers/usuarioController';
 import { getCierreCaja } from '../controllers/cierreCajaController';
+import { createRol, deleteRol, getAllRol, getRolById, updateRol } from '../controllers/rolController';
 
 const router = express.Router();
 
@@ -36,6 +37,13 @@ router.route('/servicio/:id').get(asyncHandler(getServicioById));
 router.route('/servicio/').post(asyncHandler(createServicio));
 router.route('/servicio/:id').put(asyncHandler(updateServicio));
 router.route('/servicio/:id').delete(asyncHandler(deleteServicio));
+
+// Rol
+router.route('/rol/').get(asyncHandler(getAllRol));
+router.route('/rol/:id').get(asyncHandler(getRolById));
+router.route('/rol/').post(asyncHandler(createRol));
+router.route('/rol/:id').put(asyncHandler(updateRol));
+router.route('/rol/:id').delete(asyncHandler(deleteRol));
 
 // EmpleadoPorsentaje
 router.route('/empleado-porsentaje/').get(asyncHandler(getAllEmpleadoPorsentaje));

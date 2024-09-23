@@ -185,6 +185,50 @@ export const FormaPagoSchema = z.object({
     }, z.date({ message: 'Invalid FechaCreacion' })),
 });
 
+export const RolSchema = z.object({
+    NombreRol: z.string({
+        required_error: "NombreRol is required",
+        invalid_type_error: "NombreRol must be a string",
+    }).min(1, { message: 'NombreRol is required' }),
+});
+
+export const OperacionSchema = z.object({
+    Nombre: z.string({
+        required_error: "Nombre is required",
+        invalid_type_error: "Nombre must be a string",
+    }).min(1, { message: 'Nombre is required' }),
+    Descripcion: z.string({
+        required_error: "Descripcion is required",
+        invalid_type_error: "Descripcion must be a string",
+    }).min(1, { message: 'Descripcion is required' }),
+    IdModulo: z.number({
+        required_error: "IdModulo is required",
+        invalid_type_error: "IdModulo must be a number",
+    }).positive({ message: 'IdModulo must be a positive number' }),
+});
+
+export const ModuloSchema = z.object({
+    NombreModulo: z.string({
+        required_error: "NombreModulo is required",
+        invalid_type_error: "NombreModulo must be a string",
+    }).min(1, { message: 'NombreModulo is required' }),
+    URL: z.string({
+        required_error: "URL is required",
+        invalid_type_error: "URL must be a string",
+    }).min(1, { message: 'URL is required' }),
+});
+
+export const PermisoSchema = z.object({
+    IdUsuario: z.number({
+        required_error: "IdUsuario is required",
+        invalid_type_error: "IdUsuario must be a number",
+    }).positive({ message: 'IdUsuario must be a positive number' }),
+    IdOperacion: z.number({
+        required_error: "IdOperacion is required",
+        invalid_type_error: "IdOperacion must be a number",
+    }).positive({ message: 'IdOperacion must be a positive number' }),
+});
+
 export type Empleado = z.infer<typeof EmpleadoSchema>;
 export type Servicio = z.infer<typeof ServicioSchema>;
 export type EmpleadoPorsentaje = z.infer<typeof EmpleadoPorsentajeSchema>;
@@ -192,3 +236,7 @@ export type RegistroDeBarberia = z.infer<typeof RegistroDeBarberiaSchema>;
 export type RegistroDeBarberiaUpdate = z.infer<typeof RegistroDeBarberiaSchemaUpdate>;
 export type FormaPago = z.infer<typeof FormaPagoSchema>;
 export type Usuario = z.infer<typeof UsuarioSchema>;
+export type Rol = z.infer<typeof RolSchema>;
+export type Operacion = z.infer<typeof OperacionSchema>;
+export type Modulo = z.infer<typeof ModuloSchema>;
+export type Permiso = z.infer<typeof PermisoSchema>;
