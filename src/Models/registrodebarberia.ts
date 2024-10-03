@@ -10,7 +10,7 @@ interface RegistroDeBarberiaAttributes {
   IdServicio: number,
   IdFormaPago: number,
   Fecha: Date,
-  Duracion: number,
+  Duracion: string,
   Comentario: string,
   PrecioNeto: number,
   CreateAt: Date,
@@ -34,7 +34,7 @@ class RegistroDeBarberia extends Model<RegistroDeBarberiaAttributes, RegistroDeB
   public IdServicio!: number;
   public IdFormaPago!: number;
   public Fecha!: Date;
-  public Duracion!: number;
+  public Duracion!: string;
   public Comentario!: string;
   public PrecioNeto!: number;
   public CreateAt!: Date;
@@ -66,7 +66,7 @@ RegistroDeBarberia.init({
     allowNull: false,
   },
   Duracion: {
-    type: new DataTypes.INTEGER,
+    type: new DataTypes.TIME,
     allowNull: false,
   },
   Comentario: {
@@ -113,6 +113,7 @@ RegistroDeBarberia.belongsTo(Servicio, {
     allowNull: false,
   },
 });
+
 
 RegistroDeBarberia.belongsTo(FormaPago, {
   foreignKey: {

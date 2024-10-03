@@ -9,6 +9,13 @@ export const createRegistroDeBarberia = async (registroDeBarberiaObj: RegistroDe
   registroDeBarberiaObj.CreateAt = new Date();
   registroDeBarberiaObj.UpdateAt = new Date();
   registroDeBarberiaObj.UpdateBy = registroDeBarberiaObj.CreateBy;
+  if (registroDeBarberiaObj.IdServicio !== -1) {
+    const precio = await Servicio.findByPk(registroDeBarberiaObj.IdServicio);
+    if (precio !== null) {
+      registroDeBarberiaObj.PrecioNeto = precio.PrecioNeto;
+    }
+  }
+
   const registroDeBarberia = await RegistroDeBarberia.create(registroDeBarberiaObj);
   return registroDeBarberia;
 };
@@ -33,6 +40,7 @@ export const getAllRegistroDeBarberiaExtended = async (desde: Date, hasta: Date,
           model: Servicio,
           as: 'Servicio',
           attributes: ['CodServicio', 'DescServicio'],
+          required: false // Esto hace un LEFT JOIN, para los servicios Customs
         },
         {
           model: FormaPago,
@@ -56,8 +64,8 @@ export const getAllRegistroDeBarberiaExtended = async (desde: Date, hasta: Date,
       IdEmpleado: registro.IdEmpleado,
       NombreApellidoEmpleado: `${String(registro['Empleado.Nombre'])} - ${String(registro['Empleado.Apellido'])}`,
       IdServicio: registro.IdServicio,
-      CodServicio: String(registro['Servicio.CodServicio']),
-      DescServicio: String(registro['Servicio.DescServicio']),
+      CodServicio: registro.IdServicio === -1 ? 'Personalizado' : String(registro['Servicio.CodServicio']),
+      DescServicio: registro.IdServicio === -1 ? 'Personalizado' : String(registro['Servicio.DescServicio']),
       IdFormaPago: registro.IdFormaPago,
       CodigoFormaPago: String(registro['FormaPago.Codigo']),
       DescripcionFormaPago: String(registro['FormaPago.Descripcion']),

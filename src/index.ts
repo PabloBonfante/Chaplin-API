@@ -1,8 +1,10 @@
 import express from 'express';
 import chaplin from './routes/chaplinRouters';
 import sequelize from './config/database';
+import cors from 'cors'; // Importa el paquete cors
 
 const app = express();
+app.use(cors()); // Habilita CORS sin restricciones
 app.use(express.json());
 
 const PORT = 3000;

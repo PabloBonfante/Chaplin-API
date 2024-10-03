@@ -15,8 +15,13 @@ export const insertFormaPago = async (formaPagoObj: FormaPago): Promise<FormaPag
     }
 };
 
-export const getAllFormaPago = async (): Promise<FormaPago[]> => {
-    const formasDePagos = await FormaPago.findAll();
+export const getAllFormaPago = async (activo?: boolean): Promise<FormaPago[]> => {
+
+    const formasDePagos = activo === undefined ? await FormaPago.findAll() : await FormaPago.findAll({
+        where: {
+            Activo: activo
+        }
+    });
     return formasDePagos;
 };
 

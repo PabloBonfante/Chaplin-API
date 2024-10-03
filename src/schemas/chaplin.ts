@@ -100,7 +100,7 @@ export const RegistroDeBarberiaSchema = z.object({
     IdServicio: z.number({
         required_error: "IdServicio is required",
         invalid_type_error: "IdServicio must be a number",
-    }).positive({ message: 'IdServicio must be a positive number' }),
+    }).min(-1),
     IdFormaPago: z.number({
         required_error: "IdFormaPago is required",
         invalid_type_error: "IdFormaPago must be a number",
@@ -109,10 +109,12 @@ export const RegistroDeBarberiaSchema = z.object({
         if (typeof arg === 'string' || arg instanceof Date) return new Date(arg);
         return null;
     }, z.date({ message: 'Invalid Fecha' })),
-    Duracion: z.number({
+    Duracion: z.string({
         required_error: "Duracion is required",
-        invalid_type_error: "Duracion must be a number",
-    }).positive({ message: 'Duracion must be a positive number' }),
+        invalid_type_error: "Duracion must be a string",
+    }).refine((val) => /^\d{2}:\d{2}$/.test(val), {
+        message: "Duracion must be in the format HH:mm",
+    }),
     Comentario: z.string({
         required_error: "Comentario is required",
         invalid_type_error: "Comentario must be a string",
@@ -120,7 +122,7 @@ export const RegistroDeBarberiaSchema = z.object({
     PrecioNeto: z.number({
         required_error: "PrecioNeto is required",
         invalid_type_error: "PrecioNeto must be a number",
-    }).positive({ message: 'PrecioNeto must be a positive number' }),
+    }).min(0),
     CreateBy: z.string({
         required_error: "CreateBy is required",
         invalid_type_error: "CreateBy must be a string",
@@ -135,7 +137,7 @@ export const RegistroDeBarberiaSchemaUpdate = z.object({
     IdServicio: z.number({
         required_error: "IdServicio is required",
         invalid_type_error: "IdServicio must be a number",
-    }).positive({ message: 'IdServicio must be a positive number' }),
+    }).min(-1),
     IdFormaPago: z.number({
         required_error: "IdFormaPago is required",
         invalid_type_error: "IdFormaPago must be a number",
@@ -144,10 +146,12 @@ export const RegistroDeBarberiaSchemaUpdate = z.object({
         if (typeof arg === 'string' || arg instanceof Date) return new Date(arg);
         return null;
     }, z.date({ message: 'Invalid Fecha' })),
-    Duracion: z.number({
+    Duracion: z.string({
         required_error: "Duracion is required",
-        invalid_type_error: "Duracion must be a number",
-    }).positive({ message: 'Duracion must be a positive number' }),
+        invalid_type_error: "Duracion must be a string",
+    }).refine((val) => /^\d{2}:\d{2}$/.test(val), {
+        message: "Duracion must be in the format HH:mm",
+    }),
     Comentario: z.string({
         required_error: "Comentario is required",
         invalid_type_error: "Comentario must be a string",

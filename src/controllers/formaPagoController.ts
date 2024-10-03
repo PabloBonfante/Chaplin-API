@@ -26,7 +26,14 @@ export const InsertFormaPago = async (req: Request, res: Response): Promise<void
 
 export const getAllFormaPago = async (_req: Request, res: Response): Promise<void> => {
     try {
-        const formasDePago = await formaPagoService.getAllFormaPago();
+        let activo: boolean | undefined;
+        const inActivo = _req.query.activo as string;
+
+        if (inActivo !== undefined) {
+            activo = Boolean(JSON.parse(inActivo));
+        }
+
+        const formasDePago = await formaPagoService.getAllFormaPago(activo);
         res.status(200).json(formasDePago);
     } catch (err: any) {
         res.status(500).json({ error: err.message });
