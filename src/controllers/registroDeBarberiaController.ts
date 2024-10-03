@@ -35,8 +35,8 @@ export const getAllRegistroDeBarberiaExtended = async (_req: Request, res: Respo
     // Extraer parámetros de consulta y asegurar que sean números válidos
     const page = parseInt(_req.query.page as string, 10);
     const pageSize = parseInt(_req.query.pageSize as string, 10);
-    const desde = new Date((_req.query.desde as string) + 'T00:00:00');
-    const hasta = new Date((_req.query.hasta as string) + 'T23:59:59');
+    const desde = new Date((_req.query.desde as string));
+    const hasta = new Date((_req.query.hasta as string));
 
     // Verificar si las fechas son válidas
     if (isNaN(desde.getTime()) || isNaN(hasta.getTime())) {
@@ -58,16 +58,16 @@ export const getAllRegistroDeBarberiaExtended = async (_req: Request, res: Respo
     const registrosBarberia = await registroDeBarberiaService.getAllRegistroDeBarberiaExtended(desde, hasta, validPage, validPageSize);
 
     // Contar la cantidad de registros en la página actual
-    const Records = registrosBarberia.length;
+    const pageRecord = registrosBarberia.length;
 
     // Consultar el total de registros sin paginación
-    const totalRecords = await registroDeBarberiaService.countRegistroDeBarberia();
+    const totalRecords = await registroDeBarberiaService.countRegistroDeBarberia(desde, hasta);
 
     // Enviar la respuesta con datos de información adicionales
     res.status(200).json({
       filterInfo: {
         totalRecords,
-        Records,
+        pageRecord,
         page: validPage,
         pageSize: validPageSize
       },

@@ -6,6 +6,7 @@ import { createRegistroDeBarberia, deleteRegistroDeBarberia, getAllRegistroDeBar
 import { InsertFormaPago, deleteFormaPago, getAllFormaPago, getFormaPagoById, updateFormaPago } from '../controllers/formaPagoController';
 import { getAllUsuario, getUsuarioById, InsertUsuario, updateUsuario, deleteUsuario, LoginUsuario } from '../controllers/usuarioController';
 import { getCierreCaja } from '../controllers/cierreCajaController';
+import { getRecaudacionCaja} from '../controllers/recaudacionCajaController';
 import { createRol, deleteRol, getAllRol, getRolById, updateRol } from '../controllers/rolController';
 
 const router = express.Router();
@@ -69,5 +70,8 @@ router.route('/forma-pago/:id').delete(asyncHandler(deleteFormaPago));
 
 // Cierre Caja
 router.route('/cierre-caja/').get(asyncHandler(getCierreCaja));
+
+// Recaudacion Caja
+router.route('/recaudacion-caja/').get(asyncHandler(getRecaudacionCaja));
 
 export default router;

@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import Empleado from "../Models/empleado";
 import FormaPago from "../Models/formapago";
 import RegistroDeBarberia, { RegistroDeBarberiaExtendedAttributes } from "../Models/registrodebarberia";
@@ -48,11 +48,12 @@ export const getAllRegistroDeBarberiaExtended = async (desde: Date, hasta: Date,
           attributes: ['Codigo', 'Descripcion'],
         }
       ],
-      where: {
-        Fecha: {
+      where: Sequelize.where(
+        Sequelize.literal('DATE(Fecha)'),
+        {
           [Op.between]: [desde, hasta]
         }
-      },
+      ),
       raw: true, // devuelve los datos en formato de objeto plano
       limit: pageSize, // cantidad de registros por página
       offset: (page - 1) * pageSize // salto de registros
@@ -88,9 +89,16 @@ export const getAllRegistroDeBarberiaExtended = async (desde: Date, hasta: Date,
 };
 
 // Método para contar todos los registros sin paginación
-export const countRegistroDeBarberia = async (): Promise<number> => {
+export const countRegistroDeBarberia = async (desde: Date, hasta: Date): Promise<number> => {
   try {
-    const count = await RegistroDeBarberia.count(); // O el método adecuado según tu modelo
+    const count = await RegistroDeBarberia.count({
+      where: Sequelize.where(
+        Sequelize.literal('DATE(Fecha)'),
+        {
+          [Op.between]: [desde, hasta]
+        }
+      )
+    }); 
     return count;
   } catch (error) {
     console.error('Error counting registros:', error);
