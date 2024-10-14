@@ -54,12 +54,12 @@ export class CierreCajaEmpleado {
 }
 
 export class CierreCajaDia {
-    dia: Date;
+    dia: string;
     empleados: CierreCajaEmpleado[];
     totalDia: CierreCajaTotales;
     totalDiaJefe: CierreCajaTotales;
 
-    constructor(dia: Date) {
+    constructor(dia: string) {
         this.dia = dia;
         this.empleados = [];
         this.totalDia = new CierreCajaTotales();
@@ -68,13 +68,13 @@ export class CierreCajaDia {
 }
 
 export class CierreCajaPeriodo {
-    desde: Date;
-    hasta: Date;
+    desde: string;
+    hasta: string;
     dias: CierreCajaDia[];
     totalPeriodo: CierreCajaTotales;
     totalPeriodoJefe: CierreCajaTotales;
 
-    constructor(desde: Date, hasta: Date) {
+    constructor(desde: string, hasta: string) {
         this.desde = desde;
         this.hasta = hasta;
         this.dias = [];

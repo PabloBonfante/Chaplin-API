@@ -1,4 +1,5 @@
-import Usuario from "../Models/usuario";
+import Rol from "../Models/rol";
+import Usuario, { UsuarioDTO } from "../Models/usuario";
 import bcrypt from 'bcryptjs';
 
 export const insertUsuario = async (usuarioObj: Usuario): Promise<Usuario | null> => {
@@ -35,9 +36,16 @@ export const getUsuarioById = async (id: number): Promise<Usuario | null> => {
 };
 
 // Función para iniciar sesión con Alias y Password
-export const loginUsuario = async (alias: string, password: string): Promise<Usuario | null> => {
+export const loginUsuario = async (alias: string, password: string): Promise<UsuarioDTO | null> => {
     // Buscar el usuario por Alias
     const usuario = await Usuario.findOne({
+        include: [
+            {
+                model: Rol,
+                as: 'Rol',
+                attributes: ['Id', 'NombreRol']
+            }
+        ],
         where: {
             Alias: alias
         },
@@ -48,7 +56,22 @@ export const loginUsuario = async (alias: string, password: string): Promise<Usu
 
     // Comparar la contraseña ingresada con el hash almacenado
     const isMatch: boolean = await bcrypt.compare(password, usuario.Password);
-    return isMatch ? usuario : null; // Devolver el usuario si fue exitoso de lo contrario null
+    if (!isMatch) return null;
+
+    // Crear el objeto DTO
+    const usuarioDTO: UsuarioDTO = {
+        Nombre: usuario.Nombre,
+        Apellido: usuario.Apellido,
+        Alias: usuario.Alias,
+        DNI: usuario.DNI,
+        Email: usuario.Email,
+        Rol: {
+            Id: usuario.Rol?.Id ?? 0,
+            NombreRol: usuario.Rol?.NombreRol ?? ''
+        }
+    };
+
+    return usuarioDTO;
 };
 
 export const updateUsuario = async (id: number, newUsuario: Usuario): Promise<Usuario | null> => {

@@ -3,11 +3,12 @@ import * as empleadoService from '../Services/empleadoService';
 import * as empleadoPorsentajeService from '../Services/empleadoPorsentajeService';
 import * as registroDeBarberiaService from '../Services/registroDeBarberiaService';
 import { RegistroDeBarberiaExtendedAttributes } from "../Models/registrodebarberia";
+import DateTimeToString from "../Utils/Util";
 
 export async function getCierreCaja(desde: Date, hasta: Date): Promise<CierreCajaPeriodo> {
     const respuesta: CierreCajaPeriodo = {
-        desde,
-        hasta,
+        desde: DateTimeToString(desde),
+        hasta: DateTimeToString(hasta),
         dias: [],
         totalPeriodo: new CierreCajaTotales(),
         totalPeriodoJefe: new CierreCajaTotales()
@@ -16,14 +17,15 @@ export async function getCierreCaja(desde: Date, hasta: Date): Promise<CierreCaj
     let registros: RegistroDeBarberiaExtendedAttributes[] = [];
 
     // Inicializa tieneRegistros como true
-    let tieneRegistros = true;
-    let currentPage = 1;
+    const pageSize: number = 1000;
+    let currentPage: number = 1;
+    let CantidadPaginas: number = 1;
 
-    while (tieneRegistros) {
-        const reg = await registroDeBarberiaService.getAllRegistroDeBarberiaExtended(desde, hasta, currentPage, 1000);
-        tieneRegistros = reg.length > 0;
+    while (currentPage <= CantidadPaginas) {
+        const reg = await registroDeBarberiaService.getAllRegistroDeBarberiaExtended(desde, hasta, currentPage, pageSize);
 
-        if (tieneRegistros) registros = [...registros, ...reg];
+        if (currentPage === 1) CantidadPaginas = Math.ceil(reg.length / pageSize);
+        if (reg.length > 0) registros = [...registros, ...reg];
 
         currentPage++;
     }
@@ -37,7 +39,7 @@ export async function getCierreCaja(desde: Date, hasta: Date): Promise<CierreCaj
 
         while (currentDate <= hasta) {
             const cccDia: CierreCajaDia = {
-                dia: new Date(currentDate),
+                dia: DateTimeToString(new Date(currentDate)),
                 empleados: [],
                 totalDia: new CierreCajaTotales(),
                 totalDiaJefe: new CierreCajaTotales()
@@ -55,7 +57,7 @@ export async function getCierreCaja(desde: Date, hasta: Date): Promise<CierreCaj
                 let nroCorte = 1;
                 let existeLineas = false;
 
-                const registrosDelDia = registros.filter(r => r.IdEmpleado === emp.Id && r.Fecha.toDateString() === currentDate.toDateString());
+                const registrosDelDia = registros.filter(r => r.IdEmpleado === emp.Id && DateTimeToString(r.Fecha) === DateTimeToString(currentDate));
 
                 for (const reg of registrosDelDia) {
                     const linea: CierreCajaLineas = {
@@ -87,7 +89,7 @@ export async function getCierreCaja(desde: Date, hasta: Date): Promise<CierreCaj
                     currentEmpleado.lineasDia.push(linea);
 
                     // Jefe
-                    if (reg.IdEmpleado !== jefe?.Id ?? 0) {
+                    if (reg.IdEmpleado !== jefe?.Id) {
                         cccDia.totalDiaJefe.CantCortes++;
                         cccDia.totalDiaJefe.PrecioNeto += Math.round(reg.PrecioNeto * 100) / 100;
                         cccDia.totalDiaJefe.MontoCobrar += Math.round((reg.PrecioNeto - linea.montoACobrar) * 100) / 100; // Es la plata que le queda al jefe

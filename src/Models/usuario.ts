@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
+import Rol, { RolAttributes } from './rol';
 
 interface UsuarioAttributes {
     Id?: number,
@@ -14,6 +15,9 @@ interface UsuarioAttributes {
 }
 
 interface UsuarioCreationAttributes extends Optional<UsuarioAttributes, 'Id'> { }
+export interface UsuarioDTO extends Optional<UsuarioAttributes, 'Id' | 'Password' | 'FechaCreacion' | 'IdRol'> {
+    Rol: RolAttributes;
+}
 
 class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes> implements UsuarioAttributes {
     public Id!: number;
@@ -25,6 +29,7 @@ class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes> implem
     public Password!: string;
     public FechaCreacion!: Date;
     public IdRol!: number;
+    public Rol!: RolAttributes;
 }
 
 Usuario.init({
@@ -69,6 +74,14 @@ Usuario.init({
     tableName: 'usuario',
     sequelize,
     timestamps: false,
+});
+
+// Definir las asociaciones
+Usuario.belongsTo(Rol, {
+    foreignKey: {
+        name: 'IdRol',
+        allowNull: false,
+    },
 });
 
 export default Usuario;

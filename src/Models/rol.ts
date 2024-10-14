@@ -1,20 +1,20 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
-interface RolAttributes {
-    id?: number,
+export interface RolAttributes {
+    Id?: number,
     NombreRol: string,
 }
 
-interface RolCreationAttributes extends Optional<RolAttributes, 'id'> { }
+interface RolCreationAttributes extends Optional<RolAttributes, 'Id'> { }
 
 class Rol extends Model<RolAttributes, RolCreationAttributes> implements RolAttributes {
-    public id!: number;
+    public Id!: number;
     public NombreRol!: string;
 }
 
 Rol.init({
-    id: {
+    Id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
