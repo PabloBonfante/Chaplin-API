@@ -90,6 +90,9 @@ export const ServicioSchema = z.object({
         required_error: "PrecioNeto is required",
         invalid_type_error: "PrecioNeto must be a number",
     }).positive({ message: 'PrecioNeto must be a positive number' })
+        .or(z.string().refine(value => /^\d+(\.\d+)?$/.test(value), {
+            message: 'PrecioNeto must be a decimal number'
+        }))
 });
 
 export const RegistroDeBarberiaSchema = z.object({
